@@ -1,0 +1,45 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.1.0'
+	id 'io.spring.dependency-management' version '1.1.0'
+}
+
+group = 'com.github.rha'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	compileOnly 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	implementation 'com.bazaarvoice.jolt:jolt-core:0.1.8'
+	implementation 'com.bazaarvoice.jolt:json-utils:0.1.8'
+
+
+	implementation 'com.azure:azure-storage-blob:12.22.2'
+//	implementation 'com.azure:azure-storage-blob:12.4.0'
+//	implementation 'com.azure:azure-storage-queue:12.3.0'
+//	implementation 'com.azure:azure-storage-file-share:12.2.0'
+//	implementation 'com.azure:azure-storage-file-datalake:12.0.0-preview.6'
+
+	implementation 'com.github.javafaker:javafaker:1.0.2'
+
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
