@@ -41,6 +41,10 @@ public class EmployeeController {
     @Autowired
     private BlobContainerClient blobContainerClient;
 
+    @GetMapping("/rest/ping")
+    public ResponseEntity<String> ping() {
+        return ResponseEntity.ok("OK");
+    }
     @GetMapping("/rest/load")
     public ResponseEntity<String> allRecords() throws IOException {
         var start = Instant.now();
