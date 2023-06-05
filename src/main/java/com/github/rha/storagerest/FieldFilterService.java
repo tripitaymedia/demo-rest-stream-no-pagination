@@ -16,38 +16,54 @@ public class FieldFilterService {
 
     // Default filter only shows partner number
     private static final String defaultFilter = """
-                [ {
-                    "operation": "shift",
-                    "spec": {
-                      "employeeNumber": "employeeNumber"
+                [
+                    {
+                        "operation": "shift",
+                        "spec": {
+                          "employeeNumber": "employeeNumber"
+                        }
+                    },
+                    {
+                        "operation": "default",
+                        "spec": {
+                          "filter": "defaultFilter"
+                        }
                     }
-                  } ]
+                ]
                 """;
 
     private static final Map<String, String> jsonSpecs = new HashMap<>();
     {
         jsonSpecs.put("abcde", """
                 [
-                  {
-                    "operation": "shift",
-                    "spec": {
-                      "employeeNumber": "employeeNumber",
-                      "firstName": "firstName",
-                      "email": "email",
-                      "workLocation": {
-                        "store": "workLocation.store"
+                    {
+                      "operation": "shift",
+                      "spec": {
+                        "employeeNumber": "employeeNumber",
+                        "firstName": "firstName",
+                        "email": "email",
+                        "workLocation": {
+                          "store": "workLocation.store"
+                        }
                       }
+                    },
+                    {
+                        "operation": "default",
+                        "spec": {
+                          "filter": "abcde"
+                        }
                     }
-                  }
                 ]
                 """);
         jsonSpecs.put("abcdeall", """
-                [ {
-                    "operation": "default",
-                    "spec": {
-                      "filter": "default"
+                [
+                    {
+                        "operation": "default",
+                        "spec": {
+                          "filter": "abcdeall"
+                        }
                     }
-                  }]
+                ]
                 """);
     }
 
