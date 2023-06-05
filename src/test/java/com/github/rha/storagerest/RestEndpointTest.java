@@ -1,5 +1,6 @@
 package com.github.rha.storagerest;
 
+import com.github.rha.storagerest.controller.StreamController;
 import com.github.rha.storagerest.model.WorkLocation;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -18,7 +19,7 @@ import java.util.function.Consumer;
 
 class RestEndpointTest {
 
-    private EmployeeController restEndpoint = new EmployeeController();
+    private StreamController restEndpoint = new StreamController();
 
     @Test
     public void genZrad() {

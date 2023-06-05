@@ -1,4 +1,4 @@
-package com.github.rha.storagerest;
+package com.github.rha.storagerest.service;
 
 import com.bazaarvoice.jolt.Chainr;
 import com.bazaarvoice.jolt.JsonUtils;

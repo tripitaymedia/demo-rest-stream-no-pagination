@@ -1,39 +1,34 @@
-package com.github.rha.storagerest;
+package com.github.rha.storagerest.controller;
 
-import com.azure.core.annotation.QueryParam;
 import com.azure.storage.blob.BlobClient;
 import com.azure.storage.blob.BlobContainerClient;
-import com.azure.storage.blob.specialized.BlobInputStream;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
 import com.github.rha.storagerest.model.Address;
 import com.github.rha.storagerest.model.Employee;
 import com.github.rha.storagerest.model.WorkLocation;
-import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Random;
 
-@RestController
-public class EmployeeController {
+@Controller
+public class GenerateDataController {
     @Value("${allemployees.file.name}")
     private String allEmployeesFileName;
-
-    private static final Logger log = LoggerFactory.getLogger(EmployeeController.class);
-
-    @Autowired
-    private FieldFilterService cbacLogic;
+    private static final Logger log = LoggerFactory.getLogger(StreamController.class);
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -41,10 +36,7 @@ public class EmployeeController {
     @Autowired
     private BlobContainerClient blobContainerClient;
 
-    @GetMapping("/rest/ping")
-    public ResponseEntity<String> ping() {
-        return ResponseEntity.ok("OK");
-    }
+
     @GetMapping("/rest/load")
     public ResponseEntity<String> allRecords() throws IOException {
         var start = Instant.now();
@@ -54,7 +46,7 @@ public class EmployeeController {
         var t = new Thread(() -> {
             try (out) {
                 for (int i = 1; i <= 300_000; i++) {
-                //for (int i = 0; i < 100; i++) {
+                    //for (int i = 0; i < 100; i++) {
                     if ((i % 1000) == 0) {
                         log.info("records: {}", i);
                     }
@@ -87,33 +79,7 @@ public class EmployeeController {
                 }""");
     }
 
-
-    @GetMapping("/rest/all")
-    public void allRecords(HttpServletResponse response, @QueryParam("clientId") String clientId) throws Exception {
-        try (
-            var out = response.getOutputStream();
-        ) {
-            //
-            BlobClient blobClient = blobContainerClient.getBlobClient(allEmployeesFileName);
-            try (
-                BlobInputStream is = blobClient.openInputStream();
-                 InputStreamReader isr = new InputStreamReader(is);
-                 BufferedReader reader = new BufferedReader(isr)
-            ) {
-                for (String jsonLine = reader.readLine(); jsonLine != null; jsonLine = reader.readLine()) {
-                    String newJsonWithCbac = cbacLogic.apply(clientId, jsonLine);
-                    newJsonWithCbac = newJsonWithCbac.strip();
-                    out.write(newJsonWithCbac.getBytes(StandardCharsets.UTF_8));
-                    out.write('\n');
-                }
-            } // try
-            out.flush();
-        } // try
-    }
-
-
     private Faker faker = new Faker();
-
     private Employee generateEntityModel(int i) {
         Employee model = new Employee();
         model.setEmployeeNumber( String.format("%06d", i) );
