@@ -58,7 +58,6 @@ public class EmployeeController {
                     String line = null;
                     try {
                         line = objectMapper.writeValueAsString(model);
-                        //log.info("writing: {}", line);
                     } catch (JsonProcessingException e) {
                         log.error("error serializing json", e);
                     }

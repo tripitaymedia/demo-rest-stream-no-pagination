@@ -57,8 +57,8 @@ public class FieldFilterService {
             var jsonSpecStr = jsonSpecs.getOrDefault(clientId, defaultFilter);
             List<Object> specs = JsonUtils.jsonToList(jsonSpecStr);
             chainr = Chainr.fromSpec(specs);
+            chainrMapCache.put(clientId, chainr);
         }
-        chainrMapCache.put(clientId, chainr);
         return chainr;
     }
 
